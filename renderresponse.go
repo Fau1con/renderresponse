@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 )
 
 type JSONResponse struct {
@@ -41,16 +40,8 @@ func RenderError(w http.ResponseWriter, message string, status int) {
 	renderResponse(w, response, status)
 }
 
-// validateMethod Валидатор метода
+// ValidateMethod Валидатор метода
 func ValidateMethod(w http.ResponseWriter, r *http.Request, allowedMethods ...string) bool {
-	if r.Method == http.MethodOptions {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", strings.Join(allowedMethods, ", "))
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		w.Header().Set("Access-Control-Max-Age", "86400")
-		w.WriteHeader(http.StatusOK)
-		return false
-	}
 	for _, method := range allowedMethods {
 		if r.Method == method {
 			return true
