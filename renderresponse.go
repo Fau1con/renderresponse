@@ -66,8 +66,9 @@ func ValidateMethod(w http.ResponseWriter, r *http.Request, allowedMethods ...st
 		}
 	}
 	RenderError(w,
-		fmt.Sprintf("Method %s not allowed. Allowed: %v", r.Method, allowedMethods),
+		fmt.Sprintf("Method %s is not allowed", r.Method),
 		http.StatusMethodNotAllowed,
+		fmt.Errorf("allowed methods: %v", allowedMethods),
 	)
 	return false
 }
