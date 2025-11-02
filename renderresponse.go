@@ -6,10 +6,17 @@ import (
 	"net/http"
 )
 
+type ErrorDetails struct {
+	Code    string `jsone:"code,omitempty"`
+	Message string `json:"message"`
+	Details string `json:"details,omitempty"`
+}
+
 type JSONResponse struct {
-	Status  string      `json:"status"`
-	Data    interface{} `json:"data,omitempty"`
-	Message string      `json:"message,omitempty"`
+	Status  string         `json:"status"`
+	Data    interface{}    `json:"data,omitempty"`
+	Message string         `json:"message,omitempty"`
+	Errors  []ErrorDetails `json:"errors,omitempty"`
 }
 
 // renderResponse - базовая функция для отправки JSON
@@ -32,11 +39,22 @@ func RenderJSON(w http.ResponseWriter, data interface{}, status int) {
 	renderResponse(w, response, status)
 }
 
-func RenderError(w http.ResponseWriter, message string, status int) {
+func RenderError(w http.ResponseWriter, message string, status int, errors ...error) {
 	response := JSONResponse{
 		Status:  "error",
 		Message: message,
 	}
+
+	if len(errors) > 0 {
+		errorDetails := make([]ErrorDetails, len(errors))
+		for i, err := range errors {
+			errorDetails[i] = ErrorDetails{
+				Message: err.Error(),
+			}
+		}
+		response.Errors = errorDetails
+	}
+
 	renderResponse(w, response, status)
 }
 
