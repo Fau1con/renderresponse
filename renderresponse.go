@@ -7,7 +7,7 @@ import (
 )
 
 type ErrorDetails struct {
-	Code    string `jsone:"code,omitempty"`
+	Code    string `json:"code,omitempty"`
 	Message string `json:"message"`
 	Details string `json:"details,omitempty"`
 }
